@@ -4,7 +4,7 @@ public class implementsRunnable implements Runnable{
 	Thread t;
 	implementsRunnable(String threadName) {
 		t= new Thread(this, threadName);
-		System.out.printf("%s has been initialized!", threadName);
+		System.out.printf("%s has been initialized!%n", threadName);
 		this.t.start();
 		
 		
@@ -13,12 +13,12 @@ public class implementsRunnable implements Runnable{
 	public void run() {
 		try {
 			
-			for(int i = 0; i < 10; i++){
-			    System.out.printf(" %s has been ran %d times! %n", Thread.currentThread(), i);
+			for(int i = 1; i < 10; i++){
+			    System.out.printf("%s has been ran %d times! %n", Thread.currentThread(), i);
 			    Thread.sleep(500);
 			}
 		}catch (InterruptedException e){
-		    System.out.printf("%s is interrupted!", Thread.currentThread());
+		    System.out.printf("%s is interrupted!%n", Thread.currentThread());
 			
 		}
 		System.out.printf("%s has been terminated! %n", Thread.currentThread());
