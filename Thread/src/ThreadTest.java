@@ -3,25 +3,25 @@ public class ThreadTest {
 	static Thread curThread = Thread.currentThread(); 
 	static void testSubThread()
 	{ 
-		new subThread("myThread");
+		new SubThread("myThread");
 		mainThreadUsingSleep();
 		
 	}
 	
-	static void test_ImplementsRunnable() {
-		new implementsRunnable("myThread-1");
-		new implementsRunnable("myThread-2");
-		new implementsRunnable("myThread-3");
-		new implementsRunnable("myThread-4");
+	static void testImplementsRunnable() {
+		new ImplementsRunnable("myThread-1");
+		new ImplementsRunnable("myThread-2");
+		new ImplementsRunnable("myThread-3");
+		new ImplementsRunnable("myThread-4");
 		mainThreadUsingSleep();
 	}
 	
-	static void test_Join() {
+	static void testJoin() {
 		
-		implementsRunnable t1 = new implementsRunnable("t1");
-		implementsRunnable t2 = new implementsRunnable("t2");
-		implementsRunnable t3 = new implementsRunnable("t3");
-		implementsRunnable t4 = new implementsRunnable("t4");
+		ImplementsRunnable t1 = new ImplementsRunnable("t1");
+		ImplementsRunnable t2 = new ImplementsRunnable("t2");
+		ImplementsRunnable t3 = new ImplementsRunnable("t3");
+		ImplementsRunnable t4 = new ImplementsRunnable("t4");
 		
 		for(int k=1; k<10; k++) {
 	            
@@ -29,8 +29,8 @@ public class ThreadTest {
 	                
 	        }
 	    // System.out.printf("%s has finished its job, waiting for others to terminate! %n", Thread.currentThread());
-	    // if you don't call those instance's t.join, when main thread finishes, all the
-		// other threads will hang when they finish
+	    // if you don't call those instance's t.join and don't let main sleep for a longer time
+		// when main thread finishes, all the other threads will hang when they finish
 		try{
 			System.out.printf("%s is waiting for other threads to finish!", curThread);
 			t1.t.join();
@@ -63,6 +63,35 @@ public class ThreadTest {
 		
 		
 	}
+	
+	static void testSynchronization() {
+		// initialize a instance of Callee
+		Callee cle = new Callee("random printer");
+		// initialize 3 different threads
+        // Caller invoker1 = new Caller("Caller1", cle);
+     	// Caller invoker2 = new Caller("Caller2", cle);
+     	// Caller invoker3 = new Caller("Caller3", cle);
+		Callee ducle1, ducle2, ducle3;
+		ducle1=ducle2=ducle3=cle;
+	    Caller invoker1 = new Caller("Caller1", ducle1);
+	    Caller invoker2 = new Caller("Caller2", ducle2);
+	    Caller invoker3 = new Caller("Caller3", ducle3);
+	    
+	    System.out.printf("%s is waiting for subthreads to finish!%n", curThread);
+	    try {
+		    invoker1.t.join();
+		    invoker2.t.join();
+		    invoker3.t.join();
+	    }catch (InterruptedException e) {
+		    System.out.println("interrupted");
+	    }
+	    System.out.printf("%s has terminated!%n", curThread);	   
+	    
+	    
+		
+		
+		
+	}
 		
 		
 		
@@ -72,8 +101,9 @@ public class ThreadTest {
 		
 		// testSubThread();
 		System.out.println("------------------------------------------------");
-		// test_ImplementsRunnable();
-		test_Join();
+		// testImplementsRunnable();
+		// testJoin();
+		testSynchronization();
 	
 	}
 		
