@@ -1,7 +1,7 @@
 
-public class subThread extends Thread{
+public class SubThread extends Thread{
 	
-	public subThread(String threadName) {
+	public SubThread(String threadName) {
 		super(threadName);
 		System.out.println("initialized a new thread!");
 		this.start();

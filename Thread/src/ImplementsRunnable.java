@@ -1,13 +1,12 @@
 
-public class implementsRunnable implements Runnable{
+public class ImplementsRunnable implements Runnable{
 	
 	Thread t;
-	implementsRunnable(String threadName) {
+	ImplementsRunnable(String threadName) {
 		t= new Thread(this, threadName);
 		System.out.printf("%s has been initialized!%n", threadName);
 		this.t.start();
-		
-		
+	
 	}
 	
 	public void run() {
