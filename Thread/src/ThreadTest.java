@@ -86,12 +86,55 @@ public class ThreadTest {
 		    System.out.println("interrupted");
 	    }
 	    System.out.printf("%s has terminated!%n", curThread);	   
-	    
-	    
 		
+	}
+	
+	 static void testInterThreadCommunication() {
+		// execute this function many times can get different results
+		Queue q = new Queue(8);
+		Producer p = new Producer(q);
+		Consumer c = new Consumer(q);
+		try {
+		    p.t.join();
+		    c.t.join();
+	    }catch (InterruptedException e) {
+		    System.out.println("interrupted");
+	    }
+	    System.out.printf("%s has terminated!%n", curThread);	
 		
 		
 	}
+	 
+	 static void testControlWithFlags() {
+		// main will call ControlWithFlag instance cwf's method to
+		// to affect the sub thread who is working on it.
+		ControlWithFlags cwf = new ControlWithFlags("controlled");
+		try {
+			// if main don't sleep, after initialize the sub thread, main will
+			// return and run fast, can not even notice the effect. so main have to
+			// sleep for sometime and see how subthread's behavior is affected by
+			// main thread.
+			Thread.sleep(2000);
+			cwf.suspend();
+			
+			
+			Thread.sleep(2000);
+			cwf.resume();
+			
+			
+			Thread.sleep(2000);
+			cwf.stop();	
+			
+			// give sub thread sometime to respond
+			Thread.sleep(2000);
+			
+		}catch (InterruptedException e) {
+			System.out.printf("%s has been interrupted!%n", Thread.currentThread().getName());
+		}
+		
+		System.out.printf("%s terminated! %n", Thread.currentThread().getName());
+		
+	 }
 		
 		
 		
@@ -103,7 +146,9 @@ public class ThreadTest {
 		System.out.println("------------------------------------------------");
 		// testImplementsRunnable();
 		// testJoin();
-		testSynchronization();
+		// testSynchronization();
+		// testInterThreadCommunication();
+		testControlWithFlags();
 	
 	}
 		
