@@ -31,6 +31,18 @@ select companyname from customers where customerid not in (select distinct(custo
 select orderid, productid from orderdetails o 
 where (unitprice*quantity) = (select max(unitprice*quantity) from orderdetails where orderid = o.orderid);
 
+
+# return those company's information that has ordered total value over 15800 worth of products.
+select companyname, address, fax from customers
+where exists(
+select orderid, sum(unitprice* quantity) as total 
+from orders inner join orderdetails using(orderid) 
+where customerid = customers.customerid group by orderid having total > 15800
+);
+
+select orderid, sum(unitprice* quantity) as total 
+from orderdetails group by orderid having total > 15000;
+
 select * from employees;
 select * from territories;
 select * from region;
