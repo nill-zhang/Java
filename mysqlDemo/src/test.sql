@@ -191,6 +191,17 @@ insert into jobs values
 ("5748","programmer",20000,79000),
 ("5485","carpenter",5000,40000),
 ("8751","fisher",3100,10000);
+
+# instead of using values(), you can use set to insert data to tables;
+insert into jobs 
+set job_id = "15558",
+    job_title = "dba",
+    min_salary = 2500,
+    max_salary = 50000;
+    
+select * from jobs where job_id = "15558";
+
+
 select * from jobs where job_title like "%er";
 select * from department;
 desc department;
@@ -311,5 +322,76 @@ select * from customers where customer_address like "%Blv." escape '.';
 select current_date() as 日期,current_time() as 时间,current_timestamp() 时间戳,current_user() 用户,now() as 现在;
 # the following will display the next 3 high salaries in jobs table aka(4th, 5th, 6th).
  select distinct max_salary from jobs order by max_salary desc limit 3,3;
- 
- 
+
+
+# on duplicate key update , set something.
+create table t1 (id int primary key, name varchar(255) not null);
+insert into t1 values (1, "one"), (2, "two"), (3, "three");
+insert into t1 values (3, "four") on duplicate key update name= "somebody inserted the same key";
+select * from t1;
+
+use northwind;
+prepare stement from 'select companyname, address from customers where address like ?';
+set @pattern = '%blv%';
+execute stement using @pattern;
+deallocate prepare stement;
+
+use table1;
+create table if not exists `binary`(
+id int auto_increment primary key,
+name varchar(30),
+schedule bit(7));
+
+insert into `binary`(name, schedule) values("alex", b'1101110');
+insert into `binary`(name, schedule) values("david", b'0111110');
+insert into `binary`(name, schedule) values("james", b'1111001');
+
+# get those people who is off on wendesday and sunday.
+select name, schedule from `binary` where schedule & b'0010001' = 0;
+
+# show schedule as binary
+select name, bin(schedule) as schedule from `binary` where schedule & b'0010001' = 0;
+alter table `binary` add column fulltime boolean;
+insert into `binary` (name, schedule, fulltime) values("helen", b'1100111', 2);
+insert into `binary` (name, schedule, fulltime) values("nova", b'0011111', false);
+insert into `binary` (name, schedule, fulltime) values("kevin", b'1111101', 5);
+insert into `binary` (name, schedule, fulltime) values("raymond", b'1111101', 1);
+insert into `binary` (name, schedule, fulltime) values("kyle", b'1111111', true);
+insert into `binary` (name, schedule, fulltime) values("michael", b'0000000', 1);
+select * from `binary`;
+# tests fulltime = 1
+select * from `binary` where fulltime = true;
+select * from `binary` where fulltime is true;
+select * from `binary` where fulltime is not true;
+
+select week(date(now())) week,
+weekday("2017-09-06") as weekday,
+weekofyear("2017-08-31") as weekofyear;
+
+select day("2017-08-31") as day,
+month("2017-08-31") as month,
+quarter("2017-08-31") as quarter,
+year("2017-08-31") as year;
+
+select date_add("2017-09-07", interval 1 day) as 1_day_later,
+date_sub("2017-09-08", interval 1 week) as 1_week_later,
+datediff("2017-05-21", "2014-05-21") as days_between,
+date_format("2014-05-09", "%Y/%m/%d") as new_date;
+
+create table if not exists tickets(
+id int auto_increment primary key,
+generate_time time
+);
+
+insert into tickets (generate_time) values("05:23:32");
+insert into tickets (generate_time) values("5:3:2");
+insert into tickets (generate_time) values("221127");
+insert into tickets (generate_time) values(055332);
+
+select current_time(), utc_time();
+select time_format(generate_time, "%h:%i %p") as time from tickets;
+select current_time() as string_format_time, current_time()+0 as numerical_format_time;
+
+select generate_time, hour(generate_time) h, minute(generate_time) m, second(generate_time) s from tickets;
+select timediff("23:11:28", "02:04:09") as time_gap;
+
